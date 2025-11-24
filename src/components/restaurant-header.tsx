@@ -1,102 +1,96 @@
-"use client"
+"use client";
 
-import { MapPin, Star, Clock, Bike, UtensilsCrossed } from "lucide-react"
+import Image from "next/image";
+import { Star, MapPin, Clock, Bike, UtensilsCrossed, Users } from "lucide-react";
 
 interface RestaurantHeaderProps {
-  deliveryMode: "delivery" | "collection"
-  setDeliveryMode: (mode: "delivery" | "collection") => void
+  deliveryMode: "delivery" | "collection";
+  setDeliveryMode: (mode: "delivery" | "collection") => void;
 }
 
-function RestaurantHeader({ deliveryMode, setDeliveryMode }: RestaurantHeaderProps) {
+export default function RestaurantHeader({
+  deliveryMode,
+  setDeliveryMode,
+}: RestaurantHeaderProps) {
   return (
-    <div className="w-full">
-      {/* Cover Image */}
-      <div className="h-48 w-full overflow-hidden bg-muted md:h-64">
-        <img src="/placeholder.svg?key=kakth" alt="India Gate Restaurant" className="h-full w-full object-cover" />
+    <div className="w-full bg-[#1c1a17] text-[#EEEEEE] pb-6">
+      
+      {/* COVER IMAGE */}
+      <div className="relative w-full h-48 md:h-64">
+        <Image
+          src="/images/restaurant/cover-1.png"
+          alt="Restaurant Cover"
+          fill
+          className="object-cover"
+        />
+
+        {/* DARK GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+        {/* FLOATING LOGO */}
+        <div className="absolute bottom-[-32px] left-6 flex items-center gap-3">
+          <div className="h-20 w-20 rounded-full border-4 border-[#2b2a28] overflow-hidden shadow-xl">
+            <Image
+              src="/images/restaurant/logo-1.png"
+              alt="Restaurant Logo"
+              width={80}
+              height={80}
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Restaurant Info Overlay */}
-      <div className="bg-gradient-to-t from-black/80 to-transparent absolute -translate-y-32 w-full h-32 pointer-events-none md:translate-y-0 md:bg-none md:relative md:from-transparent md:to-transparent" />
+      {/* RESTAURANT DETAILS */}
+      <div className="px-6 mt-10 gap-3 flex flex-col md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col">
+        
+        <h1 className="text-3xl font-bold">India Gate Portsmouth</h1>
 
-      {/* Restaurant Details */}
-      <div className="px-4 md:px-0 py-6 md:py-8">
-        <div className="flex flex-col gap-4">
-          {/* Name and Rating */}
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">India Gate</h1>
-              <p className="text-sm text-muted-foreground mt-2">Authentic Indian Cuisine</p>
-            </div>
-            <div className="flex items-center gap-1 bg-accent text-accent-foreground px-3 py-1 rounded-lg font-semibold text-sm flex-shrink-0">
-              <Star size={16} className="fill-current" />
-              4.8
-            </div>
+        {/* Ratings + Address */}
+       
+        <div className="flex items-center gap-2 text-sm text-[#EEEEEE]/70">
+          <Star size={16} className="fill-[#DC5F00] text-[#DC5F00]" />
+          <span>0 reviews</span>
+          <span>•</span>
+          <MapPin size={14} />
+          <span>13 Kingston Road</span>
+        </div>
+        </div>
+         <button className="self-start flex items-center gap-2 px-4 py-2 button2 transition">
+          <Users size={16} color="#DC5F00" />
+          Group order
+        </button>
+
+</div>
+        
+
+      {/* BOTTOM INFO SECTION (optional) */}
+      <div className="px-6 mt-4 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <div className="flex items-center gap-2">
+          <Clock size={18} className="text-[#DC5F00]" />
+          <div>
+            <p className="text-xs text-[#EEEEEE]/60">Delivery time</p>
+            <p className="font-semibold">20–30 mins</p>
           </div>
+        </div>
 
-          {/* Delivery/Collection Toggle */}
-          <div className="flex gap-3">
-            <button
-              onClick={() => setDeliveryMode("delivery")}
-              className={`flex-1 md:flex-none flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
-                deliveryMode === "delivery"
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-card text-foreground border border-border hover:bg-muted"
-              }`}
-            >
-              <Bike size={18} />
-              <span>Delivery</span>
-            </button>
-            <button
-              onClick={() => setDeliveryMode("collection")}
-              className={`flex-1 md:flex-none flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
-                deliveryMode === "collection"
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-card text-foreground border border-border hover:bg-muted"
-              }`}
-            >
-              <UtensilsCrossed size={18} />
-              <span>Collection</span>
-            </button>
+        <div className="flex items-center gap-2">
+          <Bike size={18} className="text-[#DC5F00]" />
+          <div>
+            <p className="text-xs text-[#EEEEEE]/60">Delivery fee</p>
+            <p className="font-semibold">From $2.00</p>
           </div>
+        </div>
 
-          {/* Info Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Clock size={18} className="text-accent flex-shrink-0" />
-              <div>
-                <p className="text-muted-foreground text-xs">Delivery time</p>
-                <p className="font-semibold text-foreground">20-30 mins</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Bike size={18} className="text-accent flex-shrink-0" />
-              <div>
-                <p className="text-muted-foreground text-xs">Delivery fee</p>
-                <p className="font-semibold text-foreground">From $2.00</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin size={18} className="text-accent flex-shrink-0" />
-              <div>
-                <p className="text-muted-foreground text-xs">Min order</p>
-                <p className="font-semibold text-foreground">$15.00</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Opening Hours */}
-          <div className="bg-card border border-border rounded-lg p-4">
-            <p className="text-sm font-semibold text-foreground mb-2">Opening hours</p>
-            <div className="space-y-1 text-sm text-muted-foreground">
-              <p>{deliveryMode === "delivery" ? "Delivery" : "Collection"} · 11:00 - 23:00</p>
-              <p className="text-accent font-medium">Currently open</p>
-            </div>
+        <div className="flex items-center gap-2">
+          <MapPin size={18} className="text-[#DC5F00]" />
+          <div>
+            <p className="text-xs text-[#EEEEEE]/60">Min order</p>
+            <p className="font-semibold">$15.00</p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export { RestaurantHeader }
-export default RestaurantHeader

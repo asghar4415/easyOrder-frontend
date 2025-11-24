@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import "@/app/restaurant/restaurant.css"
 
 interface CategoryNavProps {
   categories: string[]
@@ -19,7 +18,7 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
       setShowLeftArrow(scrollLeft > 0)
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10)
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1)
     }
   }
 
@@ -42,7 +41,7 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
 
   return (
     <div className="relative px-4 md:px-0 mb-8 sticky top-32 md:top-20 z-20 bg-background py-4 border-b border-border">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 relative">
         {showLeftArrow && (
           <button
             onClick={() => scroll("left")}
@@ -52,12 +51,17 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
           </button>
         )}
 
-        <div ref={scrollContainerRef} onScroll={checkScroll} className="flex gap-2 overflow-x-auto scrollbar-hide">
+        <div
+          ref={scrollContainerRef}
+          onScroll={checkScroll}
+          className="flex gap-2 overflow-x-auto no-scrollbar"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-button font-medium text-sm whitespace-nowrap transition-all ${
                 activeCategory === category
                   ? "bg-accent text-accent-foreground"
                   : "bg-card text-foreground border border-border hover:border-accent"
