@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Plus, Leaf, Droplet, X } from "lucide-react"
 import Image from "next/image"
 
+
 interface MenuItemOption {
   id: string
   name: string
@@ -20,7 +21,7 @@ interface MenuItem {
   isVegan?: boolean
   isVegetarian?: boolean
   isGlutenFree?: boolean
-  options?: MenuItemOption[] // optional variants
+  options?: MenuItemOption[]  // optional variants
 }
 interface MenuItemCardProps {
   item: MenuItem

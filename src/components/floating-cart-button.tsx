@@ -26,9 +26,9 @@ function FloatingCartButton({ itemCount, total, items, onRemoveItem, onUpdateQua
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-accent text-accent-foreground rounded-full p-4 shadow-lg flex items-center gap-2 font-bold text-sm animate-pulse hover:animate-none hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-6 z-50 bg-accent text-accent-foreground !rounded-full p-4 shadow-lg flex items-center gap-2 font-bold text-sm animate-pulse hover:animate-none hover:scale-110 transition-transform"
       >
-        <ShoppingCart size={20} />
+        <ShoppingCart size={20} color="#DC5F00"/>
         <span className="bg-white/20 px-2 py-1 rounded-full text-xs font-bold">{itemCount}</span>
         <span className="hidden sm:inline">${total}</span>
       </button>
@@ -54,27 +54,31 @@ function FloatingCartButton({ itemCount, total, items, onRemoveItem, onUpdateQua
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center border border-border rounded-lg bg-muted">
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 hover:bg-input transition-colors"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 hover:bg-input transition-colors"
-                      >
-                        <Plus size={16} />
-                      </button>
+                    <div className="flex items-center gap-2 border bg-[#2b2a28] rounded-full px-3">
+                    <button
+                                          onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                                          aria-label="Decrease quantity"
+                                          className="px-2 py-1 bg-card rounded-l-full"
+                                        >
+                                          <Minus size={16} color="#DC5F00" />
+                    
+                                        </button>
+                                        <span className="text-lg font-semibold">{item.quantity}</span>
+                                        <button
+                                          onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                                          className="p-1 hover:bg-input transition-colors"
+                                          aria-label="Increase quantity"
+                                        >
+                                          <Plus size={16} color="#DC5F00" />
+                    
+                                        </button>
                     </div>
 
                     <button
                       onClick={() => onRemoveItem(item.id)}
                       className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={16} color="#DC5F00" />
                     </button>
                   </div>
                 </div>
@@ -82,14 +86,14 @@ function FloatingCartButton({ itemCount, total, items, onRemoveItem, onUpdateQua
             </div>
 
             {/* Checkout */}
-            <div className="space-y-3 border-t border-border pt-4">
+            <div className="space-y-3 pt-4">
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>Total</span>
                 <span className="text-accent text-2xl">${total}</span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-full bg-accent text-accent-foreground font-bold py-3 rounded-lg hover:opacity-90 transition-opacity"
+                className="w-full !bg-[#DC5F00] text-accent-foreground font-bold py-3 !rounded-full hover:opacity-90 transition-opacity"
               >
                 Proceed to Checkout
               </button>

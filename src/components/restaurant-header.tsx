@@ -6,11 +6,21 @@ import { Star, MapPin, Clock, Bike, UtensilsCrossed, Users } from "lucide-react"
 interface RestaurantHeaderProps {
   deliveryMode: "delivery" | "collection";
   setDeliveryMode: (mode: "delivery" | "collection") => void;
+
+  restaurant: {
+    name: string;
+    address: string;
+    logo: string;
+    banner: string;
+    rating?: number;
+  }
 }
+
 
 export default function RestaurantHeader({
   deliveryMode,
   setDeliveryMode,
+  restaurant,
 }: RestaurantHeaderProps) {
   return (
     <div className="w-full bg-[#1c1a17] text-[#EEEEEE] pb-6">
@@ -18,7 +28,7 @@ export default function RestaurantHeader({
       {/* COVER IMAGE */}
       <div className="relative w-full h-48 md:h-64">
         <Image
-          src="/images/restaurant/cover-1.png"
+          src= {restaurant.banner}
           alt="Restaurant Cover"
           fill
           className="object-cover"
@@ -31,7 +41,7 @@ export default function RestaurantHeader({
         <div className="absolute bottom-[-32px] left-6 flex items-center gap-3">
           <div className="h-20 w-20 rounded-full border-4 border-[#2b2a28] overflow-hidden shadow-xl">
             <Image
-              src="/images/restaurant/logo-1.png"
+              src={restaurant.logo}
               alt="Restaurant Logo"
               width={80}
               height={80}
@@ -45,7 +55,7 @@ export default function RestaurantHeader({
       <div className="px-6 mt-10 gap-3 flex flex-col md:flex-row md:items-center md:justify-between">
       <div className="flex flex-col">
         
-        <h1 className="text-3xl font-bold">India Gate Portsmouth</h1>
+        <h1 className="text-3xl font-bold">{restaurant.name}</h1>
 
         {/* Ratings + Address */}
        
@@ -54,7 +64,7 @@ export default function RestaurantHeader({
           <span>0 reviews</span>
           <span>•</span>
           <MapPin size={14} />
-          <span>13 Kingston Road</span>
+          <span>{restaurant.address}</span>
         </div>
         </div>
          <button className="self-start flex items-center gap-2 px-4 py-2 button2 transition">
