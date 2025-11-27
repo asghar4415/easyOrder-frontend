@@ -61,10 +61,10 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-4 py-2 rounded-button font-medium text-sm whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-button button-1 font-medium text-sm whitespace-nowrap transition-all ${
                 activeCategory === category
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-card text-foreground border border-border hover:border-accent"
+                  ? "bg-accent !text-accent-foreground"
+                  : "bg-card !text-foreground border border-border hover:border-accent"
               }`}
             >
               {category}

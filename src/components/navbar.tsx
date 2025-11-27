@@ -16,7 +16,7 @@ export function Navbar(){
           {/* Left Section */}
           <div className="flex items-center gap-3">
             {/* Mobile: Back Arrow */}
-            <button className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors" aria-label="Back">
+            <button className="md:hidden p-2 hover:bg-card bg-[#2b2a28]! rounded-lg transition-colors" aria-label="Back">
               <ChevronLeft className="h-5 w-5 text-foreground" />
             </button>
 
@@ -38,12 +38,12 @@ export function Navbar(){
               onClick={() => {
                 setAccountModalOpen(true)
               }}
-              className="p-2 hover:bg-muted rounded-lg transition-colors relative hamburger-menu"
+              className="p-2 hover:bg-muted rounded-lg transition-colors relative hamburger-menu dark-button-2"
               aria-label="Menu"
             >
                 <>
                   <Menu className="h-7 w-7 text-foreground" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
+                  {/* <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" /> */}
                 </>
             </button>
           </div>
@@ -84,7 +84,7 @@ export function Navbar(){
         <h2 className="text-xl font-bold text-[#EEEEEE]">My account</h2>
         <button
           onClick={() => setAccountModalOpen(false)}
-          className="p-2 hover:bg-[#686D76]/40 rounded-lg transition-colors"
+          className="p-2 hover:bg-[#686D76]/40 rounded-lg transition-colors bg-[#2b2a28]!"
         >
           <X className="h-5 w-5 text-[#EEEEEE]" />
         </button>
@@ -103,10 +103,10 @@ export function Navbar(){
           </ul>
 
           <div className="flex gap-2 pt-2">
-            <button className="flex-1 bg-white text-[#0A2A82] font-semibold py-2 rounded-lg">
+            <button className="flex-1 bg-white! text-[#0A2A82]! font-semibold py-2 rounded-lg">
               Create account
             </button>
-            <button className="flex-1 bg-[#DC5F00] text-white font-semibold py-2 rounded-lg">
+            <button className="flex-1 bg-[#DC5F00]! text-white font-semibold py-2 rounded-lg">
               Log in
             </button>
           </div>
@@ -116,18 +116,18 @@ export function Navbar(){
         <div className="space-y-3">
          
             <button
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#686D76]/30 text-left"
+              className="w-full flex bg-[#2b2a28]! items-center p-1 rounded-lg hover:bg-[#686D76]/30 text-left"
             >
               <span className="text-[#EEEEEE] font-medium">Rewards</span>
             </button>
             
             <button
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#686D76]/30 text-left"
+              className="w-full flex items-center bg-[#2b2a28]! p-1 rounded-lg hover:bg-[#686D76]/30 text-left"
             >
               <span className="text-[#EEEEEE] font-medium">StampCards</span>
             </button>
             <button
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#686D76]/30 text-left"
+              className="w-full flex items-center bg-[#2b2a28]! p-1 rounded-lg hover:bg-[#686D76]/30 text-left"
             >
               <span className="text-[#EEEEEE] font-medium">Need help?</span>
             </button>
@@ -142,17 +142,17 @@ export function Navbar(){
         <div className="space-y-3">
 
             <button
-              className="w-full flex items-center gap-3 p-3 hover:bg-[#686D76]/30 rounded-lg text-left"
+              className="w-full flex items-center bg-[#2b2a28]! p-1 hover:bg-[#686D76]/30 rounded-lg text-left"
             >
               <span className="text-[#EEEEEE] font-medium">Become a Courier</span>
             </button>
             <button
-              className="w-full flex items-center gap-3 p-3 hover:bg-[#686D76]/30 rounded-lg text-left"
+              className="w-full flex items-center bg-[#2b2a28]! p-1 hover:bg-[#686D76]/30 rounded-lg text-left"
             >
               <span className="text-[#EEEEEE] font-medium">Corporate Ordering</span>
             </button>
             <button
-              className="w-full flex items-center gap-3 p-3 hover:bg-[#686D76]/30 rounded-lg text-left"
+              className="w-full flex items-center bg-[#2b2a28]! p-1 hover:bg-[#686D76]/30 rounded-lg text-left"
             >
               <span className="text-[#EEEEEE] font-medium">Partner with us</span>
             </button>

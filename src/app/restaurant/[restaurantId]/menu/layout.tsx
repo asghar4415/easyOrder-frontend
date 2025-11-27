@@ -13,14 +13,8 @@ export default function RestaurantMenuLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body 
-        // FIX: Added suppressHydrationWarning to ignore attributes injected by extensions
-        suppressHydrationWarning={true}
-        className="bg-background text-foreground"
-      >
-        {children}
-      </body>
-    </html>
+    <>
+      {children}
+    </>
   )
 }

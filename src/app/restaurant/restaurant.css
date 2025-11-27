@@ -169,10 +169,27 @@ input::placeholder {
   border-radius: 50px;
 }
 
-.menutitem-add
+.menuitem-add
 {
   top: -6px;
   right: -6px;
   padding: 0.3rem;
-  border-radius: 50%;
+  border-radius: 50%; 
+  z-index: 10;
+}
+
+.button-1
+{
+  background-color: #1c1a17;
+  border-radius: 50px;  
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+.dark-button-1
+{
+  background-color: #1c1a17;
+}
+.dark-button-2
+{
+  background-color: #2b2a28;
 }
