@@ -58,6 +58,7 @@ interface RestaurantData {
 }
 
 interface CartItem {
+  restaurantId: string
   id: string
   name: string
   description?: string
@@ -163,6 +164,7 @@ useEffect(() => {
       return [
         ...prev,
         {
+          restaurantId: restaurant?.id || "",
           id: cartId,
           name: item.name + (selectedOptions.length ? ` (${selectedOptions.map(o => o.name).join(", ")})` : ""),
           description: item.description,
