@@ -45,7 +45,7 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
         {showLeftArrow && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 z-10 p-2 bg-gradient-to-r from-background to-transparent"
+            className="absolute left-0 z-10 p-2 bg-[#2b2a28]! rounded-full!"
           >
             <ChevronLeft size={20} className="text-muted-foreground" />
           </button>
@@ -75,7 +75,7 @@ function CategoryNav({ categories, activeCategory, setActiveCategory }: Category
         {showRightArrow && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 z-10 p-2 bg-gradient-to-l from-background to-transparent"
+            className="absolute right-0 z-10 p-2 bg-[#2b2a28]! rounded-full!"
           >
             <ChevronRight size={20} className="text-muted-foreground" />
           </button>

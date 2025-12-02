@@ -24,7 +24,7 @@ function FloatingCartButton({ itemCount, total, items, onRemoveItem, onUpdateQua
   const router = useRouter()
 
   const goToCheckout = () => {
-    const restaurantId = localStorage.getItem("restaurantId")
+    const restaurantId = localStorage.getItem("restaurant_id")
     router.push(`/restaurant/${restaurantId}/checkout`)
   }
   return (

@@ -11,7 +11,7 @@ export const COLORS = {
 // --- Generic Modal ---
 export function Modal({ onClose, title, children }: { onClose: () => void; title: string; children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center p-4 backdrop-blur-sm md:overflow-hidden overflow-auto  md:pt-6 md:pb-6 pt-20">
       <div className={`bg-[${COLORS.bgCard}] rounded-lg w-full max-w-md p-6 relative shadow-lg border border-white/10`}>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold" style={{ color: COLORS.text }}>{title}</h3>

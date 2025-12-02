@@ -23,7 +23,7 @@ function ShoppingBasket({ items, total, onRemoveItem, onUpdateQuantity }: Shoppi
   const router = useRouter()
 
   const goToCheckout = () => {
-    const restaurantId = localStorage.getItem("restaurantId")
+    const restaurantId = localStorage.getItem("restaurant_id")
     router.push(`/restaurant/${restaurantId}/checkout`)
   }
 

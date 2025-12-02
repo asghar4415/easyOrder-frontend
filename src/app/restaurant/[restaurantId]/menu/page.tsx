@@ -73,6 +73,7 @@ export default function RestaurantMenu() {
   const [restaurant, setRestaurant] = useState<RestaurantData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const [cart, setCart] = useState<CartItem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("All")
@@ -111,24 +112,28 @@ export default function RestaurantMenu() {
   }, [])
  
   // Restore cart on first render
-useEffect(() => {
-  if (typeof window === "undefined") return
-  const savedCart = localStorage.getItem("cart")
-  if (savedCart) {
-    try {
-      setCart(JSON.parse(savedCart))
-    } catch (err) {
-      console.error("Failed to parse saved cart", err)
-      localStorage.removeItem("cart")
-    }
-  }
-}, [])
+  useEffect(() => {
+    if (typeof window === "undefined") return
 
-// Persist cart to localStorage whenever it changes
-useEffect(() => {
-  if (typeof window === "undefined") return
-  localStorage.setItem("cart", JSON.stringify(cart))
-}, [cart])
+    const savedCart = localStorage.getItem("cart")
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart)
+        setCart(parsedCart)
+      } catch (err) {
+        console.error("Failed to parse saved cart", err)
+        localStorage.removeItem("cart")
+      }
+    }
+    setIsInitialized(true)
+  }, [])
+
+ useEffect(() => {
+    if (!isInitialized) return 
+    
+    if (typeof window === "undefined") return
+    localStorage.setItem("cart", JSON.stringify(cart))
+  }, [cart, isInitialized])
 
 
   const allItems =

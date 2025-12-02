@@ -7,7 +7,8 @@ export interface CartItem {
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
-  const serviceFee = 0.50
+  // const serviceFee = 0.50
+  const serviceFee = 0.00
 
   // 1. Load Cart
   useEffect(() => {
@@ -26,7 +27,9 @@ export function useCart() {
   // 3. Calculated Totals (Derived State - No setters needed!)
   const totals = useMemo(() => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    const tax = subtotal * 0.135
+    // const tax = subtotal * 0.135
+    // const total = subtotal + tax + serviceFee
+    const tax = 0
     const total = subtotal + tax + serviceFee
     return { subtotal, tax, total, serviceFee }
   }, [cart])
