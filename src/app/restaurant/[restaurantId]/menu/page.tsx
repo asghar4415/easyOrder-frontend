@@ -50,6 +50,7 @@ interface Category {
 interface RestaurantData {
   id: string
   name: string
+  slug?: string
   logo?: string
   banner?: string
   address?: string
@@ -60,6 +61,8 @@ interface RestaurantData {
 interface CartItem {
   restaurantId: string
   id: string
+  menuItemId?: string
+  selectedOptionIds?: string[]
   name: string
   description?: string
   price: number
@@ -68,7 +71,9 @@ interface CartItem {
 }
 
 export default function RestaurantMenu() {
-  const { restaurantId } = useParams()
+  const params = useParams()
+  const restaurantSlug = params.restaurantId
+  
 
   const [restaurant, setRestaurant] = useState<RestaurantData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -81,17 +86,24 @@ export default function RestaurantMenu() {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (!restaurantId) return
+    if (!restaurantSlug) return
 
     const fetchRestaurant = async () => {
       try {
         setLoading(true)
+        // Call the new Slug Endpoint
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/restaurants/restaurant-data/${restaurantId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/restaurants/data-by-slug/${restaurantSlug}`
         )
-        // backend may respond with { data: ... } or direct object
-        setRestaurant(res.data.data || res.data)
-        localStorage.setItem("restaurant_id", restaurantId || "")
+        console.log("API Response:", res.data)
+        
+        const data = res.data.data || res.data
+        setRestaurant(data)
+
+        if (data && data.id) {
+          localStorage.setItem("restaurant_id", data.id)
+        }
+        
         setError(null)
       } catch (err) {
         console.error(err)
@@ -102,7 +114,8 @@ export default function RestaurantMenu() {
     }
 
     fetchRestaurant()
-  }, [restaurantId])
+  }, [restaurantSlug])
+
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -155,7 +168,9 @@ export default function RestaurantMenu() {
   const categories = restaurant ? ["All", ...restaurant.categories.map((c) => c.name)] : ["All"]
 
   const addToCart = (item: any, selectedOptions: MenuOption[] = [], qty = 1) => {
-    const optionsKey = selectedOptions.map((o) => o.id).join("-")
+    
+    const optionIds = selectedOptions.map((o) => o.id)
+    const optionsKey = optionIds.join("-")
     const cartId = optionsKey ? `${item.id}-${optionsKey}` : item.id
 
     const optionsPrice = selectedOptions.reduce((s, o) => s + (o.price || 0), 0)
@@ -171,6 +186,8 @@ export default function RestaurantMenu() {
         {
           restaurantId: restaurant?.id || "",
           id: cartId,
+          menuItemId: item.id,
+          selectedOptionIds: optionIds,
           name: item.name + (selectedOptions.length ? ` (${selectedOptions.map(o => o.name).join(", ")})` : ""),
           description: item.description,
           price: itemPrice,
@@ -251,7 +268,7 @@ export default function RestaurantMenu() {
 
               <CategoryNav categories={categories} activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
 
-              <div className="md:px-4 md:px-0 space-y-4 pb-20">
+              <div className="md:px-4 space-y-4 pb-20">
                 {filteredItems.map((item) => (
                   <MenuItemCard key={item.id} item={item} onAddToCart={addToCart} />
                 ))}
