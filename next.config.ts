@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optional: enable future Next.js features
     appDir: true,
+    //  allowedDevOrigins: [
+    //   "localhost:3000", 
+    //   "stevie-nondiscerning-unresolutely.ngrok-free.dev",
+    //   "http://192.168.2.105:3001/"
+    // ],
   },
 
   // Turbopack config is empty by default; no Webpack needed
