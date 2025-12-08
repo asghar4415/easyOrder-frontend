@@ -2,7 +2,7 @@ import { Loader2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+export default function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (
     <Loader2Icon
       role="status"
@@ -12,5 +12,3 @@ function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
     />
   )
 }
-
-export { Spinner }

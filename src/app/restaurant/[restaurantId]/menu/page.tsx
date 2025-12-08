@@ -10,7 +10,7 @@ import ShoppingBasket from "@/components/shopping-basket"
 import CategoryNav from "@/components/category-nav"
 import FloatingCartButton from "@/components/floating-cart-button"
 import { Navbar } from "@/components/navbar"
-import { Spinner } from "@/components/ui/spinner"
+import Spinner  from "@/components/ui/spinner"
 
 // --- Interfaces ---
 interface MenuOption {
