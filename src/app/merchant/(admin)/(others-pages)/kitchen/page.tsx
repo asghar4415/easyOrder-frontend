@@ -14,6 +14,8 @@ export default function KitchenPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true); 
 
+  const deliveryTime = useRestaurant()?.restaurant?.deliveryTime ?? 30; // Default to 30 mins if not set
+
   const fetchOrders = useCallback(async (isBackground = false) => {
     if (!restaurant?.id) return;
 
@@ -127,21 +129,18 @@ export default function KitchenPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Kitchen Display</h2>
-            <p className="text-sm text-gray-500">Live feed of incoming orders</p>
+            <p className="text-sm text-gray-500">
+               Live feed • Target Time: <span className="font-bold text-orange-600">{deliveryTime} mins</span>
+            </p>
         </div>
         
-        {/* Simple Stats */}
         <div className="flex gap-3">
              <div className="px-4 py-2 bg-orange-50 border border-orange-100 rounded-lg dark:bg-orange-900/10 dark:border-orange-800">
-                <span className="block text-xl font-bold text-orange-600 dark:text-orange-400">
-                    {preparingCount}
-                </span>
+                <span className="block text-xl font-bold text-orange-600 dark:text-orange-400">{preparingCount}</span>
                 <span className="text-xs text-orange-600/80 uppercase font-semibold">Preparing</span>
              </div>
              <div className="px-4 py-2 bg-white border border-gray-200 rounded-lg dark:bg-white/5 dark:border-gray-800">
-                <span className="block text-xl font-bold text-gray-800 dark:text-white">
-                    {queueCount}
-                </span>
+                <span className="block text-xl font-bold text-gray-800 dark:text-white">{queueCount}</span>
                 <span className="text-xs text-gray-500 uppercase font-semibold">Queue</span>
              </div>
         </div>
@@ -154,24 +153,16 @@ export default function KitchenPage() {
                 key={order.id} 
                 order={order} 
                 onUpdateStatus={handleStatusUpdate} 
+                deliveryTime={deliveryTime} // <--- PASSING THE PROP HERE
             />
             ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-[400px] bg-white border border-dashed border-gray-300 rounded-xl dark:bg-white/5 dark:border-gray-700">
-             <div className="w-16 h-16 mb-4 text-gray-300 dark:text-gray-600">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-             </div>
+             {/* ... Empty State SVG ... */}
              <h3 className="text-lg font-medium text-gray-900 dark:text-white">All caught up!</h3>
              <p className="text-gray-500">No active orders in the kitchen.</p>
-             <button 
-                onClick={() => fetchOrders()}
-                className="mt-4 text-sm text-orange-600 hover:text-orange-700 font-medium"
-             >
-                Refresh now
-             </button>
+             <button onClick={() => fetchOrders()} className="mt-4 text-sm text-orange-600 hover:text-orange-700 font-medium">Refresh now</button>
         </div>
       )}
     </div>

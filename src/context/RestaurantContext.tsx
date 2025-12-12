@@ -67,6 +67,7 @@ export interface Restaurant {
   slug: string;
   name: string;
   description: string;
+  isAutoAcceptOrders: boolean;
   address: string;
   phone: string;
   email: string;
@@ -74,6 +75,7 @@ export interface Restaurant {
   banner: string | null;
   isActive: boolean;
   isVerified: boolean;
+  deliveryTime: number;
   openingHours: OpeningHours;
   commissionRate: number;
   adminId: string;
