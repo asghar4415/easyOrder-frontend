@@ -80,7 +80,7 @@ export default function OrderDetailsModal({ order, isOpen, onClose }: OrderDetai
                   <tr key={item.id}>
                     <td className="px-4 py-3">
                       <p className="font-medium text-gray-800 dark:text-white">{item.menuItem.name}</p>
-                      {item.options.length > 0 && (
+                      {item.options?.length > 0 && (
                         <div className="mt-1 space-y-1">
                           {item.options.map((opt) => (
                             <p key={opt.id} className="text-xs text-gray-500">

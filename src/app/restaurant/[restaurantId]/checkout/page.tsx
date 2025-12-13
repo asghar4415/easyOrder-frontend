@@ -152,7 +152,6 @@ export default function CheckoutPage() {
            let rawMenuItemId = (item as any).menuItemId;
           let rawOptionIds = (item as any).selectedOptionIds || [];
 
-          console.log("Processing cart item:", item);
 
          if (!rawMenuItemId && item.id.includes("-")) {
                 const parts = item.id.split("-");
@@ -177,28 +176,24 @@ export default function CheckoutPage() {
         ordertype: backendOrderType,
         paymenttype: backendPaymentType
       }
-console.log("Order Payload:", payload);
+// console.log("Order Payload:", payload);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/orders/create-order/${customerId}`, 
         payload
       )
-if (paymentMethod === "Pay online" && response.data.data.paymenttype === "CARD") {
-        
-        if (response.data.paymentUrl) {
-          window.location.href = response.data.paymentUrl
-          
-        } 
+
+      const orderData = response.data;
+if (orderData.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
+}
         else {
-           setCart([])
-           localStorage.removeItem("cart")
-           
-        }
-      }
-      else if (response.data.paymenttype === "CASH") {
-        setCart([])
-        localStorage.removeItem("cart")
-        alert("Order placed successfully!")
-      }
+           setCart([]);
+if (typeof window !== "undefined") localStorage.removeItem("cart");
+      setSuccess({ message: "Order placed successfully!" });
+         setTimeout(() => {
+             router.push(`/order-success/${orderData.id}`);
+          }, 2000);
+    }
 
     } catch (err: any) {
       console.error("Error placing order", err)
@@ -207,7 +202,7 @@ if (paymentMethod === "Pay online" && response.data.data.paymenttype === "CARD")
     } finally {
       setIsPlacingOrder(false)
     }
-  }
+  } 
 
   // Helper to close modal
   const closeModal = () => {

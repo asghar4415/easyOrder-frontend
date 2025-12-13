@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import KitchenOrderCard from "@/components/kitchen/KitchenOrderCard";
 import { Order, OrderStatus } from "@/types/order";
 import { useRestaurant } from "@/context/RestaurantContext";
-import Spinner from "@/components/ui/spinner"; // Assuming you have this component
+import Spinner from "@/components/ui/spinner"; 
 
 export default function KitchenPage() {
   const { restaurant } = useRestaurant();
@@ -14,7 +14,7 @@ export default function KitchenPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true); 
 
-  const deliveryTime = useRestaurant()?.restaurant?.deliveryTime ?? 30; // Default to 30 mins if not set
+  const deliveryTime = restaurant?.deliveryTime ?? 30; 
 
   const fetchOrders = useCallback(async (isBackground = false) => {
     if (!restaurant?.id) return;
@@ -22,21 +22,16 @@ export default function KitchenPage() {
     try {
       const token = Cookies.get("token");
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
       if (!token) return;
 
       const response = await axios.get(`${apiUrl}/orders/getall-orders/${restaurant.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Ensure data is array
       const data = Array.isArray(response.data) ? response.data : [];
       setOrders(data);
-
-
     } catch (error) {
       console.error("Error fetching kitchen orders:", error);
-
     } finally {
       setIsLoading(false);
       if (!isBackground) setIsInitialLoading(false);
@@ -45,82 +40,51 @@ export default function KitchenPage() {
 
   useEffect(() => {
     fetchOrders(false);
-
-    const interval = setInterval(() => {
-      fetchOrders(true);
-    }, 30000); 
-
+    // You can actually reduce this interval if you are using WebSockets elsewhere
+    const interval = setInterval(() => { fetchOrders(true); }, 30000); 
     return () => clearInterval(interval);
   }, [fetchOrders]);
 
-
   const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus) => {
-    if (isUpdating) return; // Prevent double clicks
+    if (isUpdating) return;
     
+    // Optimistic Update
     const previousOrders = [...orders];
     setOrders((prev) => 
-        prev.map((order) => {
-            if (order.id === orderId) {
-                return { ...order, status: newStatus };
-            }
-            return order;
-        })
+        prev.map((order) => order.id === orderId ? { ...order, status: newStatus } : order)
     );
 
     try {
       const token = Cookies.get("token");
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
       await axios.put(
         `${apiUrl}/orders/update-order/${orderId}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      fetchOrders();   
-
+      // No need to fetchOrders() immediately if optimistic update worked, 
+      // but safe to keep to ensure data consistency
+      fetchOrders(true);   
     } catch (error) {
       console.error("Failed to update status:", error);
-      setOrders(previousOrders);
-      alert("Failed to update order status. Please try again.");
+      setOrders(previousOrders); // Revert on error
+      alert("Failed to update status.");
     } finally {
         setIsUpdating(false);
     }
   };
+
   const activeOrders = orders.filter(o => 
     o.status === "CONFIRMED" || o.status === "PREPARING" 
   );
 
+  // --- SORTING LOGIC: OLDEST FIRST ---
   const sortedOrders = activeOrders.sort((a, b) => {
-    const isAPreparing = a.status === "PREPARING";
-    const isBPreparing = b.status === "PREPARING";
-
-    if (isAPreparing && !isBPreparing) return -1;
-    if (!isAPreparing && isBPreparing) return 1;
-    
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
 
+  if (isInitialLoading) return <div className="flex h-[50vh] justify-center items-center"><Spinner /></div>;
 
-  if ( isLoading && orders.length === 0) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-            <Spinner />
-            <p className="text-gray-500">Loading kitchen feed...</p>
-        </div>
-      </div>
-    );
-  }
- if (isInitialLoading) {
-      return (
-        <div className="flex h-[50vh] w-full items-center justify-center">
-           <Spinner />
-        </div>
-      );
-    }
-
-  // --- 6. Stats Calculation ---
   const preparingCount = orders.filter(o => o.status === 'PREPARING').length;
   const queueCount = orders.filter(o => o.status === 'CONFIRMED').length;
 
@@ -130,7 +94,7 @@ export default function KitchenPage() {
         <div>
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Kitchen Display</h2>
             <p className="text-sm text-gray-500">
-               Live feed • Target Time: <span className="font-bold text-orange-600">{deliveryTime} mins</span>
+               Live feed • Target: <span className="font-bold text-orange-600">{deliveryTime} mins</span>
             </p>
         </div>
         
@@ -153,13 +117,12 @@ export default function KitchenPage() {
                 key={order.id} 
                 order={order} 
                 onUpdateStatus={handleStatusUpdate} 
-                deliveryTime={deliveryTime} // <--- PASSING THE PROP HERE
+                deliveryTime={deliveryTime}
             />
             ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-[400px] bg-white border border-dashed border-gray-300 rounded-xl dark:bg-white/5 dark:border-gray-700">
-             {/* ... Empty State SVG ... */}
              <h3 className="text-lg font-medium text-gray-900 dark:text-white">All caught up!</h3>
              <p className="text-gray-500">No active orders in the kitchen.</p>
              <button onClick={() => fetchOrders()} className="mt-4 text-sm text-orange-600 hover:text-orange-700 font-medium">Refresh now</button>

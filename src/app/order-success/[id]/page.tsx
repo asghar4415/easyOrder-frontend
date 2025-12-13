@@ -12,7 +12,7 @@ export default function OrderSuccessPage() {
   const params = useParams()
   const orderId = params.id
 
-  const [restaurantId, setRestaurantId] = useState<string | null>(null)
+  const [restaurantSlug, setRestaurantSlug] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   // 1. Clear the cart immediately when this page loads
@@ -31,14 +31,17 @@ export default function OrderSuccessPage() {
       try {
         // We fetch the order to know which restaurant to send them back to
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`)
-        console.log("Order Details Response:", response.data)
         const orderData = response.data
         
-        if (orderData && orderData.restaurantId) {
-          setRestaurantId(orderData.restaurantId)
+      if (orderData && orderData.restaurant) {
+          // --- FIX: Prefer the SLUG from the restaurant object ---
+          // If your DB field is named differently (e.g. 'urlSlug'), change '.slug' below
+          const slug = orderData.restaurant.slug || orderData.restaurant.id;
+          setRestaurantSlug(slug);
         }
       } catch (error) {
-        console.error("Failed to fetch order details", error)
+         console.error("Failed to fetch order details", error)
+        
       } finally {
         setLoading(false)
       }
@@ -47,9 +50,7 @@ export default function OrderSuccessPage() {
     fetchOrderDetails()
   }, [orderId])
 
-  // Logic to determine where the back button goes
-  // If we found the ID, go to that menu. If not (error/loading), go to home/browsing.
-  const backLink = restaurantId ? `/restaurant/${restaurantId}/menu` : "/"
+  const backLink = restaurantSlug ? `/restaurant/${restaurantSlug}/menu` : "/"
 
   return (
     <div className="min-h-screen bg-[#1c1a17] text-[#EEEEEE] flex flex-col items-center justify-center p-4">
@@ -83,7 +84,7 @@ export default function OrderSuccessPage() {
               className="w-full flex items-center justify-center gap-2 bg-[#DC5F00] hover:opacity-90 text-white font-bold py-3 px-6 rounded-lg transition-all"
             >
               <ShoppingBag size={20} />
-              {restaurantId ? "Back to Menu" : "Back to Home"}
+              {restaurantSlug ? "Back to Menu" : "Back to Home"}
             </Link>
           )}
 

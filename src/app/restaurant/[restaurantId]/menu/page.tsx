@@ -95,7 +95,6 @@ export default function RestaurantMenu() {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/restaurants/data-by-slug/${restaurantSlug}`
         )
-        console.log("API Response:", res.data)
         
         const data = res.data.data || res.data
         setRestaurant(data)
