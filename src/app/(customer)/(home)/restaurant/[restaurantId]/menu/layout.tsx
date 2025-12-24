@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import "@/app/restaurant/restaurant.css"
+import "@/app/(customer)/(home)/restaurant/restaurant.css"
 
 export const metadata: Metadata = {
   title: "Restaurant Menu",

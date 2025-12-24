@@ -52,7 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (userData.role === "RESTAURANT_ADMIN") {
       router.push("/merchant")
-    } else {
+    }
+    else if(userData.role === "SUPER_ADMIN"){
+      router.push("/admin/dashboard")
+    }
+
+    else {
       router.push("/")
     }
   }

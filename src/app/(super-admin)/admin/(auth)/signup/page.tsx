@@ -2,8 +2,8 @@ import SignUpForm from "@/components/auth/superadmin/AdminSignUp";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Next.js SignUp Page | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js SignUp Page TailAdmin Dashboard Template",
+  title: "Sign Up | EasyOrder Super Admin",
+  description: "Create an account to manage restaurants and oversee operations as a Super Admin on EasyOrder.",
   // other metadata
 };
 

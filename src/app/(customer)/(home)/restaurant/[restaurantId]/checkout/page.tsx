@@ -3,7 +3,7 @@
 import type React from "react"
 import axios from "axios"
 import { useState, useEffect } from "react"
-import { Edit2, Loader2 } from "lucide-react" 
+import { Edit2, Loader2, Search } from "lucide-react" 
 import { useCart } from "@/hooks/useCart"
 import { Modal, CheckoutSection, COLORS } from "@/components/checkout-ui"
 import { useRouter } from "next/navigation"
@@ -21,6 +21,10 @@ export default function CheckoutPage() {
   const [isLoadingUser, setIsLoadingUser] = useState(false)
   const [error, setError] = useState({ message: "" })
   const [success, setSuccess] = useState({ message: "" })
+
+   const [showFindUser, setShowFindUser] = useState(false)
+  const [searchEmail, setSearchEmail] = useState("")
+  const [isSearchingUser, setIsSearchingUser] = useState(false)
 
   const [orderingMethod, setOrderingMethod] = useState("Delivery")
   const [paymentMethod, setPaymentMethod] = useState("Pay online")
@@ -62,22 +66,7 @@ export default function CheckoutPage() {
       const user = response.data.user
       
       if (user) {
-        const address = user.addresses?.[0] || {}
-        const nameParts = user.name ? user.name.split(" ") : ["", ""]
-        const firstName = nameParts[0] || ""
-        const lastName = nameParts.slice(1).join(" ") || ""
-
-        setCustomerInfo({
-          firstName,
-          lastName,
-          email: user.email || "",
-          phone: user.phone || "",
-          line1: address.line1 || "",
-          line2: address.line2 || "",
-          city: address.city || "",
-          county: address.county || "",
-          eircode: address.eircode || ""
-        })
+        populateCustomerState(user)
       }
     } catch (err) {
       console.error("Failed to fetch saved customer", err)
@@ -86,6 +75,50 @@ export default function CheckoutPage() {
       setIsLoadingUser(false)
     }
   }
+  const populateCustomerState = (user: any) => {
+    const address = user.addresses?.[0] || {}
+    const nameParts = user.name ? user.name.split(" ") : ["", ""]
+    const firstName = nameParts[0] || ""
+    const lastName = nameParts.slice(1).join(" ") || ""
+
+    setCustomerInfo({
+      firstName,
+      lastName,
+      email: user.email || "",
+      phone: user.phone || "",
+      line1: address.line1 || "",
+      line2: address.line2 || "",
+      city: address.city || "",
+      county: address.county || "",
+      eircode: address.eircode || ""
+    })
+  }
+
+  const handleFindUser = async () => {
+     if (!searchEmail) return
+    setIsSearchingUser(true)
+    setError({ message: "" })
+
+    try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/get-user-by-email/${searchEmail}`)
+        
+        if (response.data.user) {
+            const user = response.data.user
+            populateCustomerState(user)
+            localStorage.setItem("customerId", user.id) // Save ID so we don't create duplicate
+            setShowFindUser(false)
+            setSuccess({ message: "Welcome back! Your details have been loaded." })
+        } else {
+            setError({ message: "No customer found with this email." })
+        }
+    } catch (err) {
+        console.error("User search failed", err)
+        setError({ message: "User not found or error occurred." })
+    } finally {
+        setIsSearchingUser(false)
+    }
+  }
+
 
     const handleSaveCustomerInfo = async () => {
     setError({ message: "" })
@@ -190,9 +223,7 @@ if (orderData.paymentUrl) {
            setCart([]);
 if (typeof window !== "undefined") localStorage.removeItem("cart");
       setSuccess({ message: "Order placed successfully!" });
-         setTimeout(() => {
-             router.push(`/order-success/${orderData.id}`);
-          }, 2000);
+      router.push(`/order-status/${orderData.id}`);
     }
 
     } catch (err: any) {
@@ -208,6 +239,7 @@ if (typeof window !== "undefined") localStorage.removeItem("cart");
   const closeModal = () => {
     setActiveModal(null)
     setError({ message: "" })
+    setShowFindUser(false)
   }
 
   return (
@@ -232,6 +264,38 @@ if (typeof window !== "undefined") localStorage.removeItem("cart");
               onEdit={() => setActiveModal("PERSONAL")}
               icon={<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>}
             >
+              {!showFindUser && (
+             <div className="mb-4 ">
+               <button 
+                 onClick={() => setShowFindUser(true)}
+                 className="text-sm bg-[#2b2a28]! text-[#DC5F00]! hover:underline flex items-center gap-1"
+               >
+                 <Search size={14}/> Find your details
+               </button>
+             </div>
+          )}
+          {/* --- NEW: Find User Form --- */}
+          {showFindUser ? (
+             <div className="bg-[#2b2a28] p-4 rounded-lg border border-white/10 mb-4 animate-in fade-in zoom-in duration-300">
+                <h4 className="text-sm font-bold text-[#EEEEEE] mb-2">Find by Email</h4>
+                <div className="flex gap-2">
+                   <Input 
+                      placeholder="Enter your email" 
+                      value={searchEmail}
+                      onChange={(v: string) => setSearchEmail(v)}
+                   />
+                   <button 
+                      onClick={handleFindUser}
+                      disabled={isSearchingUser}
+                      className="bg-[#DC5F00]! text-white px-4 rounded-lg hover:opacity-90 disabled:opacity-50"
+                   >
+                      {isSearchingUser ? <Loader2 className="animate-spin" size={18}/> : <Search size={18}/>}
+                   </button>
+                </div>
+                <button onClick={() => setShowFindUser(false)} className="text-xs bg-[#2b2a28]! text-zinc-500! mt-2 hover:text-[#EEEEEE]">Cancel</button>
+             </div>
+          ) : null}
+        
               {isLoadingUser ? (
                  <div className="animate-pulse space-y-2">
                    <div className="h-4 bg-white/10 rounded w-1/3"></div>
