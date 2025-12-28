@@ -98,6 +98,8 @@ interface SuperAdminContextType {
   fetchCompleteRestaurantData: (id: string) => Promise<any>; // New function
   updateRestaurantStatus: (id: string, status: { isActive?: boolean; isVerified?: boolean }) => Promise<void>;
   deleteRestaurant: (id: string) => Promise<void>;
+  createRestaurant: (payload: any) => Promise<any>;
+  updateRestaurant: (id: string, payload: any) => Promise<any>;
 }
 
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undefined);
@@ -171,7 +173,7 @@ export function SuperAdminProvider({ children }: { children: React.ReactNode }) 
       throw err;
     }
   };
-  const fetchCompleteRestaurantData = async (id: string) => {
+  const fetchCompleteRestaurantData = useCallback(async (id: string) => {
   try {
     const token = Cookies.get("token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -185,12 +187,43 @@ export function SuperAdminProvider({ children }: { children: React.ReactNode }) 
   } catch (err: any) {
     throw new Error(err.response?.data?.error || "Failed to fetch complete details");
   }
-};
+}, []);
+ const createRestaurant = useCallback(async (payload: any) => {
+    try {
+      const token = Cookies.get("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+      const response = await axios.post(`${apiUrl}/restaurants/create-restaurant`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      await fetchAllRestaurants();
+      return response.data;
+    } catch (err: any) {
+      throw new Error(err.response?.data?.error || "Failed to create restaurant");
+    }
+  }, [fetchAllRestaurants]); 
 
   useEffect(() => {
     fetchAllRestaurants();
   }, [fetchAllRestaurants]);
+
+  const updateRestaurant = useCallback(async (id: string, payload: any) => {
+  try {
+    const token = Cookies.get("token");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const response = await axios.put(`${apiUrl}/restaurants/update-restaurant/${id}`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // Refresh the list to reflect changes in the sidebar and main list
+    await fetchAllRestaurants();
+    return response.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Failed to update restaurant");
+  }
+}, [fetchAllRestaurants]);
 
   return (
     <SuperAdminContext.Provider 
@@ -202,6 +235,8 @@ export function SuperAdminProvider({ children }: { children: React.ReactNode }) 
         updateRestaurantStatus,
         deleteRestaurant,
         fetchCompleteRestaurantData,
+        createRestaurant,
+        updateRestaurant,
       }}
     >
       {children}

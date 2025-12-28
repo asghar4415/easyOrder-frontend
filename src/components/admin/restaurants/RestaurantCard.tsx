@@ -36,11 +36,13 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
         <div className="space-y-2.5">
           <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
             <User size={14} className="text-orange-500" />
-            <span className="text-xs font-medium truncate">{restaurant.admin.email}</span>
+            <span className="text-xs font-medium ">{restaurant.admin?.email ?? (
+        <span className="text-red-400 italic">No Owner Assigned</span>
+      )}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
             <LayoutGrid size={14} className="text-orange-500" />
-            <span className="text-xs font-medium">{restaurant._count.categories} Menu Categories</span>
+            <span className="text-xs font-medium">{restaurant._count?.categories ?? 0} Menu Categories</span>
           </div>
         </div>
       </div>

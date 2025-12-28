@@ -29,7 +29,6 @@ const AppSidebar: React.FC = () => {
   const pathname = usePathname();
   const { logout } = useAuth();
 
-  // 1. Move Nav Items into useMemo so they update when restaurants load
   const { mainItems, systemItems } = useMemo(() => {
     const main: NavItem[] = [
       {
@@ -43,7 +42,6 @@ const AppSidebar: React.FC = () => {
         subItems: [
           { name: "List View", path: "/admin/restaurants" },
           { name: "Add New", path: "/admin/restaurants/create" },
-          // Map dynamic restaurants
           ...restaurants.map((res) => ({
             name: res.name,
             path: `/admin/restaurants/${res.id}`,
@@ -91,32 +89,25 @@ const AppSidebar: React.FC = () => {
 
   const isActive = useCallback((path: string) => path === pathname, [pathname]);
 
-  // 2. Optimized Submenu Auto-Open logic
   useEffect(() => {
     let submenuMatched = false;
-    
-    // Check main items
     mainItems.forEach((nav, index) => {
       if (nav.subItems?.some(sub => pathname.startsWith(sub.path))) {
         setOpenSubmenu({ type: "main", index });
         submenuMatched = true;
       }
     });
-
-    // Check system items
     systemItems.forEach((nav, index) => {
       if (nav.subItems?.some(sub => pathname.startsWith(sub.path))) {
         setOpenSubmenu({ type: "others", index });
         submenuMatched = true;
       }
     });
-
     if (!submenuMatched && !isHovered && !isExpanded) {
       setOpenSubmenu(null);
     }
   }, [pathname, mainItems, systemItems, isHovered, isExpanded]);
 
-  // Handle Submenu Height Animation
   useEffect(() => {
     if (openSubmenu !== null) {
       const key = `${openSubmenu.type}-${openSubmenu.index}`;
@@ -210,16 +201,16 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-16 lg:mt-0 top-0 left-0 bg-white dark:bg-gray-900 h-screen transition-all duration-300 z-40 border-r border-gray-200 dark:border-gray-800 px-5 
+      className={`fixed mt-16 lg:mt-0 top-0 left-0 bg-white dark:bg-gray-900 h-screen transition-all duration-300 z-40 border-r border-gray-200 dark:border-gray-800 px-5 flex flex-col
         ${isExpanded || isMobileOpen || isHovered ? "w-[290px]" : "w-[90px]"}
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* 1. Header Area (Always Top) */}
       <div className={`py-6 flex items-center ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start gap-3"}`}>
         <Link href="/admin/dashboard" className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-lg">
-             {/* Logo SVG */}
              <GridIcon />
           </div>
           {(isExpanded || isHovered || isMobileOpen) && (
@@ -228,29 +219,34 @@ const AppSidebar: React.FC = () => {
         </Link>
       </div>
 
-      <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar pb-10">
+      {/* 2. Scrollable Middle Area (flex-1) */}
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-6">
         <nav className="space-y-8">
           <div>
-            <h2 className="mb-4 text-xs uppercase font-bold text-gray-400 tracking-widest">
+            <h2 className={`mb-4 text-xs uppercase font-bold text-gray-400 tracking-widest ${!isExpanded && !isHovered ? "text-center" : ""}`}>
               {isExpanded || isHovered || isMobileOpen ? "Administration" : <HorizontaLDots />}
             </h2>
             {renderMenuItems(mainItems, "main")}
           </div>
 
           <div>
-            <h2 className="mb-4 text-xs uppercase font-bold text-gray-400 tracking-widest">
+            <h2 className={`mb-4 text-xs uppercase font-bold text-gray-400 tracking-widest ${!isExpanded && !isHovered ? "text-center" : ""}`}>
               {isExpanded || isHovered || isMobileOpen ? "System" : <HorizontaLDots />}
             </h2>
             {renderMenuItems(systemItems, "others")}
           </div>
         </nav>
+      </div>
 
-        <div className="mt-auto border-t border-gray-100 dark:border-gray-800 pt-4">
-          <button onClick={logout} className="flex items-center p-2 text-gray-500 hover:text-red-500 w-full transition-colors">
-            <PlugInIcon className="rotate-180" />
-            {(isExpanded || isHovered || isMobileOpen) && <span className="ml-3 font-bold">Log Out</span>}
-          </button>
-        </div>
+      {/* 3. Footer Area (Always Pinned Bottom) */}
+      <div className="mt-auto border-t border-gray-100 dark:border-gray-800 py-4 bg-white dark:bg-gray-900">
+        <button 
+          onClick={logout} 
+          className={`flex items-center p-2 text-gray-500 hover:text-red-500 w-full transition-colors ${!isExpanded && !isHovered ? "justify-center" : "justify-start"}`}
+        >
+          <PlugInIcon className="rotate-180" />
+          {(isExpanded || isHovered || isMobileOpen) && <span className="ml-3 font-bold">Log Out</span>}
+        </button>
       </div>
     </aside>
   );
