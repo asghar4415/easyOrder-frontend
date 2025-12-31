@@ -42,10 +42,6 @@ const AppSidebar: React.FC = () => {
         subItems: [
           { name: "List View", path: "/admin/restaurants" },
           { name: "Add New", path: "/admin/restaurants/create" },
-          ...restaurants.map((res) => ({
-            name: res.name,
-            path: `/admin/restaurants/${res.id}`,
-          })),
         ],
       },
       {

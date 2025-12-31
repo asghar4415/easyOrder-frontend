@@ -67,5 +67,18 @@ export const menuService = {
       }
       throw error;
     }
+  },
+
+   async syncMenuItem(itemId: string, payload: any) {
+    const token = Cookies.get("token");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    
+    // Using the 'sync' endpoint we designed for the backend
+    const response = await axios.put(`${apiUrl}/menu-items/update-completemenu/${itemId}`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    
+    return response.data;
   }
+
 };

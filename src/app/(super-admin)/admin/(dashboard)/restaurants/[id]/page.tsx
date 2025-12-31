@@ -4,12 +4,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useSuperAdminRestaurants } from "@/context/AdminRestaurantContext";
 import Spinner from "@/components/ui/spinner";
 import EditRestaurantModal from "@/components/admin/restaurants/EditRestaurantModal";
-import AddMenuItemModal from "@/components/admin/restaurants/AddMenuItemModal"; // Correct import
+import AddMenuItemModal from "@/components/admin/restaurants/AddMenuItemModal";
+
+import EditMenuItemModal from "@/components/admin/restaurants/EditMenuItemModal";
 import { toast } from "sonner";
 import { 
   ArrowLeft, Phone, Mail, Clock, ShieldCheck, 
   MapPin, Edit3, ExternalLink, CheckCircle2,
-  Plus
+  Plus, Flame, Leaf
 } from "lucide-react";
 
 export default function RestaurantDetailPage() {
@@ -22,6 +24,7 @@ export default function RestaurantDetailPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("info");
+  const [editingItem, setEditingItem] = useState<any>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -51,7 +54,6 @@ export default function RestaurantDetailPage() {
     }
   };
 
-  // --- INTERNAL RENDER HELPERS (Moved inside to access state/id/loadData) ---
 
   const renderInfoTab = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -142,7 +144,18 @@ export default function RestaurantDetailPage() {
           onClose={() => setIsMenuModalOpen(false)}
           onSuccess={loadData}
         />
+
+
       )}
+
+      {editingItem && (
+      <EditMenuItemModal 
+        item={editingItem} 
+        categories={data?.categories || []} 
+        onClose={() => setEditingItem(null)} 
+        onSuccess={loadData} 
+      />
+    )}
 
       {data?.categories && data.categories.length > 0 ? (
         data.categories.map((cat: any) => (
@@ -154,13 +167,28 @@ export default function RestaurantDetailPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {(cat.items || []).map((item: any) => (
-                <div key={item.id} className="flex gap-3 p-3 border border-gray-100 dark:border-gray-800 rounded-xl bg-gray-50/20">
+               <div key={item.id} className="group relative flex gap-3 p-3 border border-gray-100 dark:border-gray-800 rounded-xl bg-gray-50/20 transition-all hover:border-orange-200">
+                 <button 
+                   onClick={() => setEditingItem(item)}
+                   className="absolute top-2 right-2 p-1.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg text-gray-400 hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                >
+                  <Edit3 size={12} />
+                </button>
+
                   {item.image && <img src={item.image} className="w-14 h-14 rounded-lg object-cover" alt={item.name} />}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{item.name}</p>
-                    <p className="text-[10px] text-gray-500 line-clamp-1 my-0.5">{item.description}</p>
-                    <p className="text-orange-600 font-bold text-xs">${item.basePrice}</p>
-                  </div>
+      
+      <div className="flex-1 min-w-0 pr-6"> {/* Added pr-6 to give space so text doesn't go under the button */}
+        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{item.name}</p>
+        <p className="text-[10px] text-gray-500 line-clamp-1 my-0.5">{item.description}</p>
+        
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-orange-600 font-bold text-xs">${item.basePrice}</p>
+           <div className="flex gap-1">
+            {item.isSpicy && <Flame size={10} className="text-red-500" />}
+            {item.isVegetarian && <Leaf size={10} className="text-green-500" />}
+          </div>
+        </div>
+      </div>
                 </div>
               ))}
             </div>

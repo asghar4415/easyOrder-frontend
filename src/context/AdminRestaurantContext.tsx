@@ -87,7 +87,6 @@ export interface Restaurant {
   logo?: string | null;
   banner?: string | null;
   deliveryTime?: number;
-  adminId?: string;
 }
 
 interface SuperAdminContextType {
