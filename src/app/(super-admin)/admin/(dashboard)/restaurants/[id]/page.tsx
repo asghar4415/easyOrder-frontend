@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 export default function RestaurantDetailPage() {
+  const Router = useRouter();
   const { id } = useParams();
   const router = useRouter();
   const { fetchCompleteRestaurantData, updateRestaurant } = useSuperAdminRestaurants();
@@ -252,7 +253,14 @@ export default function RestaurantDetailPage() {
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Management</h3>
             <div className="space-y-2.5">
               <button onClick={() => setIsEditModalOpen(true)} className="w-full flex items-center justify-center gap-2 bg-orange-500 text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-all"><Edit3 size={16} /> Edit Details</button>
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 transition-all"><ExternalLink size={16} /> Storefront</button>
+              <button 
+              onClick={()=>
+              {
+                Router.push(`/restaurant/${data.slug}/menu`)
+                
+              }
+              }
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 transition-all"><ExternalLink size={16} /> Storefront</button>
             </div>
           </div>
           <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-5 text-white shadow-md">

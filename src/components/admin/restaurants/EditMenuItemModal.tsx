@@ -126,8 +126,8 @@ export default function EditMenuItemModal({ item, categories, onClose, onSuccess
           <div className="flex items-center gap-3">
              <div className="p-2 bg-orange-100 dark:bg-orange-500/10 text-orange-500 rounded-xl"><Settings2 size={20}/></div>
              <div>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-white">Configure Menu Asset</h2>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-tighter">Sync ID: {item.id}</p>
+                <h2 className="text-lg font-bold text-gray-800 dark:text-white">Update Menu Item</h2>
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-tighter">Item ID: {item.id}</p>
              </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors"><X size={20} /></button>
@@ -292,7 +292,7 @@ export default function EditMenuItemModal({ item, categories, onClose, onSuccess
         <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-4 sticky bottom-0 bg-white dark:bg-gray-900 rounded-b-3xl">
            <button type="button" onClick={onClose} disabled={loading} className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4">Discard</button>
            <Button type="submit" variant="newvariant" disabled={loading || uploading} onClick={handleSubmit} className="px-12 py-3 text-xs font-bold">
-             {loading ? <div className="flex items-center gap-2"><Loader2 className="animate-spin" size={14}/> Synchronizing Data...</div> : "Save & Sync Menu"}
+             {loading ? <div className="flex items-center gap-2"><Loader2 className="animate-spin" size={14}/> Updating Menu Item...</div> : "Save & Sync Menu"}
            </Button>
         </div>
       </div>

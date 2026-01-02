@@ -15,7 +15,12 @@ export default function AssignOwnerForm({ email }: { email: string }) {
 
 
   const availableRestaurants = useMemo(() => {
-    return restaurants.filter(res => !res.admin.id);
+    //check if restaurant has no admin assigned
+    if(!restaurants) return [];
+
+
+
+    return restaurants.filter(res => !res?.admin?.id);
   }, [restaurants]);
 
   const handleAssign = async () => {
